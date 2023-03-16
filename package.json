@@ -1,0 +1,19 @@
+{
+  "name": "@deva/mycli",
+  "version": "1.0.0",
+  "description": "Customizable CLI using plugins",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Devganesh1998/mycli"
+  },
+  "author": {
+		"name": "devganesh1998",
+		"email": "devganesh91@gmail.com",
+		"url": "https://devganesh.netlify.app"
+	},
+  "license": "MIT",
+  "dependencies": {
+    "commander": "10.0.0"
+  }
+}
