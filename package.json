@@ -8,12 +8,21 @@
     "url": "https://github.com/Devganesh1998/mycli"
   },
   "author": {
-		"name": "devganesh1998",
-		"email": "devganesh91@gmail.com",
-		"url": "https://devganesh.netlify.app"
-	},
+    "name": "devganesh1998",
+    "email": "devganesh91@gmail.com",
+    "url": "https://devganesh.netlify.app"
+  },
+  "scripts": {
+    "build": "rollup --config"
+  },
   "license": "MIT",
   "dependencies": {
     "commander": "10.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.0.0",
+    "rollup": "^3.19.1",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.2"
   }
 }
