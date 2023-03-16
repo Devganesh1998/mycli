@@ -12,8 +12,10 @@
     "email": "devganesh91@gmail.com",
     "url": "https://devganesh.netlify.app"
   },
+  "bin": "./dist/index.js",
   "scripts": {
     "dev": "NODE_ENV=development rollup -cw",
+    "prepublish": "yarn build",
     "build": "rollup --config",
     "stats": "BUILD_STATS=true yarn build",
     "lint": "eslint src --ext .ts",
