@@ -13,8 +13,10 @@
     "url": "https://devganesh.netlify.app"
   },
   "scripts": {
-    "build": "rollup --config",
-    "stats": "BUILD_STATS=true yarn build"
+    "build": "yarn lint && rollup --config",
+    "stats": "BUILD_STATS=true yarn build",
+    "lint": "eslint src --ext .ts",
+    "lint-fix": "yarn lint --fix"
   },
   "license": "MIT",
   "dependencies": {
@@ -22,6 +24,9 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.36.0",
     "rollup": "^3.19.1",
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-progress": "^1.1.2",

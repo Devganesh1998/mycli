@@ -3,6 +3,7 @@ import progress from 'rollup-plugin-progress';
 import { visualizer } from 'rollup-plugin-visualizer';
 import cleaner from 'rollup-plugin-cleaner';
 
+// eslint-disable-next-line no-undef
 const inspect = process.env.BUILD_STATS;
 
 export default {
@@ -20,7 +21,7 @@ export default {
         progress({
             clearLine: false,
         }),
-        ...(!!inspect
+        ...(inspect
             ? [
                   visualizer({
                       emitFile: true,
