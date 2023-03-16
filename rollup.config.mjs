@@ -3,9 +3,12 @@ import progress from 'rollup-plugin-progress';
 import { visualizer } from 'rollup-plugin-visualizer';
 import eslint from '@rollup/plugin-eslint';
 import cleaner from 'rollup-plugin-cleaner';
+import json from '@rollup/plugin-json';
 
 // eslint-disable-next-line no-undef
 const inspect = process.env.BUILD_STATS;
+// eslint-disable-next-line no-undef
+const isDev = process.env.NODE_ENV === 'development';
 
 export default {
     input: 'src/index.ts',
@@ -14,6 +17,14 @@ export default {
         format: 'cjs',
         sourcemap: true,
     },
+    ...(isDev
+        ? {
+              watch: {
+                  buildDelay: 100,
+                  include: 'src/**',
+              },
+          }
+        : {}),
     plugins: [
         eslint({
             throwOnError: true,
@@ -22,10 +33,11 @@ export default {
             targets: ['./dist'],
         }),
         typescript(),
+        json(),
         progress({
             clearLine: false,
         }),
-        ...(inspect
+        ...(inspect && !isDev
             ? [
                   visualizer({
                       emitFile: true,
