@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import progress from 'rollup-plugin-progress';
 import { visualizer } from 'rollup-plugin-visualizer';
+import eslint from '@rollup/plugin-eslint';
 import cleaner from 'rollup-plugin-cleaner';
 
 // eslint-disable-next-line no-undef
@@ -14,6 +15,9 @@ export default {
         sourcemap: true,
     },
     plugins: [
+        eslint({
+            throwOnError: true,
+        }),
         cleaner({
             targets: ['./dist'],
         }),

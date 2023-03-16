@@ -13,7 +13,7 @@
     "url": "https://devganesh.netlify.app"
   },
   "scripts": {
-    "build": "yarn lint && rollup --config",
+    "build": "rollup --config",
     "stats": "BUILD_STATS=true yarn build",
     "lint": "eslint src --ext .ts",
     "lint-fix": "yarn lint --fix"
@@ -23,6 +23,7 @@
     "commander": "10.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-eslint": "^9.0.3",
     "@rollup/plugin-typescript": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
