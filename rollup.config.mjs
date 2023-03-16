@@ -20,7 +20,6 @@ export default {
     ...(isDev
         ? {
               watch: {
-                  buildDelay: 100,
                   include: 'src/**',
               },
           }

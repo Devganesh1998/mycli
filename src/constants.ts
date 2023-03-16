@@ -34,3 +34,5 @@ export const NODE_SERVICES = {
 };
 
 export const DEFAULT_DATABASE = 'tracxndev';
+
+export const DOCXN_PATH = '~/tracxn/infra/scripts/docxn/docxn.py';
