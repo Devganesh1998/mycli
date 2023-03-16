@@ -13,7 +13,8 @@
     "url": "https://devganesh.netlify.app"
   },
   "scripts": {
-    "build": "rollup --config"
+    "build": "rollup --config",
+    "stats": "BUILD_STATS=true yarn build"
   },
   "license": "MIT",
   "dependencies": {
@@ -22,6 +23,9 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.0.0",
     "rollup": "^3.19.1",
+    "rollup-plugin-cleaner": "^1.0.0",
+    "rollup-plugin-progress": "^1.1.2",
+    "rollup-plugin-visualizer": "^5.9.0",
     "tslib": "^2.5.0",
     "typescript": "^5.0.2"
   }
