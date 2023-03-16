@@ -19,55 +19,72 @@ program
         'LOGS_HOME env to pass at node service, fallbacks to $HOME/tracxn/logs/<SERVICE_NAME>/.',
     )
     .option(
+        '-pa, --path <SERVICE_PATH>',
+        'If need to run service from custom path, can use this option. Accepts absolute path only.',
+    )
+    .option(
         '-p, --port <PORT>',
         'Port number to pass as env to node service, fallbacks to default port based on service.',
     )
-    .action((serviceName: keyof typeof NODE_SERVICES, options: { database: string }) => {
-        console.log({ serviceName, options });
-        const { PORT, path } = NODE_SERVICES[serviceName];
-        const { database } = options;
-        let serviceStopped = false;
-        // Cleanup
-        ['SIGINT', 'exit', 'SIGQUIT', 'SIGTERM'].forEach(signal => {
-            process.on(signal, () => {
-                console.log(`\nmycli: Received exit signal(${signal}), so stopping ${serviceName} service.\n`);
-                console.log(`mycli: Running \`docxn ${serviceName} stop\` to point haproxy to devCloud service.\n`);
-                if (!serviceStopped) {
-                    // docxn <service> stop
-                    execSync(`python3 ${DOCXN_PATH} ${serviceName} stop`, {
-                        encoding: 'utf8',
-                        stdio: [0, 1, 2],
-                    });
-                }
-                serviceStopped = true;
-                console.log(`mycli: Done.\n`);
+    .action(
+        (
+            serviceName: keyof typeof NODE_SERVICES,
+            options: { database: string; logsHome: string; port: string; path: string },
+        ) => {
+            const { PORT, path } = NODE_SERVICES[serviceName];
+            const { database, logsHome, port, path: pathFromArg } = options;
+            const serviceLogsHome = logsHome ? logsHome : `$HOME/tracxn/logs/${serviceName}/`;
+            const servicePort = Number.isNaN(parseInt(port)) ? PORT : parseInt(port);
+            const servicePath = pathFromArg || path;
+            let serviceStopped = false;
+            // Cleanup
+            ['SIGINT', 'exit', 'SIGQUIT', 'SIGTERM'].forEach(signal => {
+                process.on(signal, () => {
+                    console.log(`\nmycli: Received exit signal(${signal}), so stopping ${serviceName} service.\n`);
+                    console.log(
+                        `mycli: Running \`docxn ${serviceName} stop\` to point haproxy to devCloud ${serviceName} service.\n`,
+                    );
+                    if (!serviceStopped) {
+                        // docxn <service> stop
+                        execSync(`python3 ${DOCXN_PATH} ${serviceName} stop`, {
+                            encoding: 'utf8',
+                            stdio: [0, 1, 2],
+                        });
+                    }
+                    serviceStopped = true;
+                    console.log(`mycli: Done.\n`);
+                });
             });
-        });
 
-        console.log(
-            `mycli: Running \`docxn ${serviceName} start\` to point haproxy to local ${serviceName} service.\n`,
-        );
+            console.log(
+                `mycli: Running \`docxn ${serviceName} start\` to point haproxy to local ${serviceName} service.\n`,
+            );
 
-        // docxn <service> start;
-        execSync(`python3 ${DOCXN_PATH} ${serviceName} start`, {
-            encoding: 'utf8',
-            stdio: [0, 1, 2],
-        });
-
-        console.log(`\nmycli: haproxy is now pointed to local ${serviceName} service.\n`);
-
-        console.log(`\nmycli: Starting ${serviceName} service in local with logs.\n`);
-
-        // docxn <service> start
-        execSync(
-            `cd ${path} && LOGS_HOME=$HOME/tracxn/logs/${serviceName}/ DATABASE=${
-                database || 'tracxndev'
-            } PORT=${PORT} yarn dev`,
-            {
+            // docxn <service> start;
+            execSync(`python3 ${DOCXN_PATH} ${serviceName} start`, {
                 encoding: 'utf8',
                 stdio: [0, 1, 2],
-            },
-        );
-    });
+            });
+
+            console.log(`\nmycli: haproxy is now pointed to local ${serviceName} service.\n`);
+
+            console.log(
+                `\nmycli: Starting ${serviceName} service in local with DATABASE: ${
+                    database || 'tracxndev'
+                }, LOGS_HOME: ${serviceLogsHome}, PORT: ${servicePort} envs at Path - ${servicePath}.\n`,
+            );
+
+            // docxn <service> start
+            execSync(
+                `cd ${servicePath} && LOGS_HOME=${serviceLogsHome} DATABASE=${
+                    database || 'tracxndev'
+                } PORT=${servicePort} yarn dev`,
+                {
+                    encoding: 'utf8',
+                    stdio: [0, 1, 2],
+                },
+            );
+        },
+    );
 
 program.parse();
