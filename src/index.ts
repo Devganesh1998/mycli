@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { getArgumentValidator } from './utils';
 import { Command } from 'commander';
 import { execSync } from 'child_process';
