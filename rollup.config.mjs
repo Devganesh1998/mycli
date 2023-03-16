@@ -16,6 +16,8 @@ export default {
         dir: 'dist',
         format: 'cjs',
         sourcemap: true,
+        // Need this for CLI
+        banner: '#!/usr/bin/env node',
     },
     ...(isDev
         ? {
