@@ -1,5 +1,5 @@
 {
-  "name": "@deva/mycli",
+  "name": "@deva2k/mycli",
   "version": "1.0.0",
   "description": "Customizable CLI using plugins",
   "main": "index.js",
