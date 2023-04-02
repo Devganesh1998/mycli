@@ -30,7 +30,10 @@ export const updateThaproxyNodeServiceRoute = ({
             } catch (error) {
                 /* empty */
             }
-            const updatedFileContent = fileContentStr.replace(`\n${service}\n`, '');
+            const updatedFileContent = fileContentStr
+                .replaceAll(new RegExp(`(/\n)*${service}(/\n)*`, 'g'), '')
+                // Clear empty new lines
+                .replace(/(^[ \t]*\n)/gm, '');
             fs.writeFileSync(DOCXN_SERVICE_ROUTE_CONFIG_FILE, updatedFileContent, 'utf-8');
             break;
         }
