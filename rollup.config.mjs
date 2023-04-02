@@ -3,6 +3,7 @@ import progress from 'rollup-plugin-progress';
 import { visualizer } from 'rollup-plugin-visualizer';
 import eslint from '@rollup/plugin-eslint';
 import cleaner from 'rollup-plugin-cleaner';
+import terser from '@rollup/plugin-terser';
 import json from '@rollup/plugin-json';
 
 // eslint-disable-next-line no-undef
@@ -34,6 +35,9 @@ export default {
             targets: ['./dist'],
         }),
         typescript(),
+        terser({
+            maxWorkers: 4,
+        }),
         json(),
         progress({
             clearLine: false,
