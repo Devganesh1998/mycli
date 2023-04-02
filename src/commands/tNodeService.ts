@@ -1,7 +1,13 @@
 import { Command } from 'commander';
 import { execSync } from 'child_process';
 import { NODE_SERVICES, DEFAULT_DATABASE, T_NODE_SERVICE_STATUS } from './../constants';
-import { getArgumentValidator, updateThaproxyNodeServiceRoute } from './../utils';
+import {
+    getArgumentValidator,
+    updateThaproxyNodeServiceRoute,
+    getIsTracxnHaproxyUp,
+    startTracxnHaproxy,
+    logToConsole,
+} from './../utils';
 
 const registerCommands = (program: Command) => {
     program
@@ -35,32 +41,35 @@ const registerCommands = (program: Command) => {
                 // Cleanup
                 ['SIGINT', 'exit', 'SIGQUIT', 'SIGTERM'].forEach(signal => {
                     process.on(signal, () => {
-                        console.log(`\nmycli: Received exit signal(${signal}), so stopping ${serviceName} service.\n`);
+                        logToConsole(`Received exit signal(${signal}), so stopping ${serviceName} service`);
                         if (!serviceStopped) {
                             // docxn <service> stop
                             updateThaproxyNodeServiceRoute({ service: serviceName, status: T_NODE_SERVICE_STATUS.AWS });
                             serviceStopped = true;
                         }
-                        console.log(
-                            `mycli: Tracxn's Haproxy will now point to devCloud's \`${serviceName}\` service.\n`,
-                        );
-                        console.log(`mycli: Done.\n`);
+                        logToConsole(`Tracxn's Haproxy will now point to devCloud's \`${serviceName}\` service`);
+                        logToConsole(`Done 🎉`);
                         process.exit(0);
                     });
                 });
 
+                const isTracxnHaproxyUp = getIsTracxnHaproxyUp();
+
+                if (!isTracxnHaproxyUp) {
+                    startTracxnHaproxy();
+                }
+
                 // docxn <service> start;
                 updateThaproxyNodeServiceRoute({ service: serviceName, status: T_NODE_SERVICE_STATUS.LOCAL });
 
-                console.log(`mycli: Tracxn's Haproxy is now pointing to local ${serviceName} service.\n`);
+                logToConsole(`Tracxn's Haproxy is now pointing to local ${serviceName} service`);
 
-                console.log(
-                    `\nmycli: Starting ${serviceName} service in local with DATABASE: ${
+                logToConsole(
+                    `Starting ${serviceName} service in local with DATABASE: ${
                         database || 'tracxndev'
-                    }, LOGS_HOME: ${serviceLogsHome}, PORT: ${servicePort} envs at Path - ${servicePath}.\n`,
+                    }, LOGS_HOME: ${serviceLogsHome}, PORT: ${servicePort} envs at Path - ${servicePath}`,
                 );
 
-                // docxn <service> start
                 execSync(
                     `cd ${servicePath} && LOGS_HOME=${serviceLogsHome} DATABASE=${
                         database || 'tracxndev'
