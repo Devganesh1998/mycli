@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { getArgumentValidator } from './utils';
+import { getArgumentValidator, updateThaproxyNodeServiceRoute } from './utils';
 import { Command } from 'commander';
 import { execSync } from 'child_process';
 
 import { version } from '../package.json';
-import { DEFAULT_DATABASE, NODE_SERVICES, DOCXN_PATH } from './constants';
+import { DEFAULT_DATABASE, NODE_SERVICES, T_NODE_SERVICE_STATUS } from './constants';
 
 const program = new Command();
 
@@ -42,33 +42,21 @@ program
             ['SIGINT', 'exit', 'SIGQUIT', 'SIGTERM'].forEach(signal => {
                 process.on(signal, () => {
                     console.log(`\nmycli: Received exit signal(${signal}), so stopping ${serviceName} service.\n`);
-                    console.log(
-                        `mycli: Running \`docxn ${serviceName} stop\` to point haproxy to devCloud ${serviceName} service.\n`,
-                    );
                     if (!serviceStopped) {
                         // docxn <service> stop
-                        execSync(`python3 ${DOCXN_PATH} ${serviceName} stop`, {
-                            encoding: 'utf8',
-                            stdio: [0, 1, 2],
-                        });
+                        updateThaproxyNodeServiceRoute({ service: serviceName, status: T_NODE_SERVICE_STATUS.AWS });
+                        serviceStopped = true;
                     }
-                    serviceStopped = true;
+                    console.log(`mycli: Tracxn's Haproxy will now point to devCloud's \`${serviceName}\` service.\n`);
                     console.log(`mycli: Done.\n`);
                     process.exit(0);
                 });
             });
 
-            console.log(
-                `mycli: Running \`docxn ${serviceName} start\` to point haproxy to local ${serviceName} service.\n`,
-            );
-
             // docxn <service> start;
-            execSync(`python3 ${DOCXN_PATH} ${serviceName} start`, {
-                encoding: 'utf8',
-                stdio: [0, 1, 2],
-            });
+            updateThaproxyNodeServiceRoute({ service: serviceName, status: T_NODE_SERVICE_STATUS.LOCAL });
 
-            console.log(`\nmycli: haproxy is now pointed to local ${serviceName} service.\n`);
+            console.log(`mycli: Tracxn's Haproxy is now pointing to local ${serviceName} service.\n`);
 
             console.log(
                 `\nmycli: Starting ${serviceName} service in local with DATABASE: ${
