@@ -1,5 +1,6 @@
 import { platform } from 'os';
 import { execSync } from 'child_process';
+import chalk from 'chalk';
 import { InvalidArgumentError } from 'commander';
 import fs from 'fs';
 import { DOCXN_SERVICE_ROUTE_CONFIG_FILE, T_NODE_SERVICE_STATUS, NODE_SERVICES } from './constants';
@@ -11,8 +12,27 @@ export const getArgumentValidator = (possibleValues: string[]) => (value: string
     return value;
 };
 
-export const logToConsole = (message: string) => {
-    console.log(`\nmycli: ${message}.`);
+export const logToConsole = (message: string, status: 'INFO' | 'ERROR' | 'SUCCESS' = 'INFO') => {
+    let updatedMessage = `\nmycli: ${message}.`;
+    switch (status) {
+        case 'INFO': {
+            updatedMessage = chalk.blue(updatedMessage);
+            break;
+        }
+        case 'SUCCESS': {
+            updatedMessage = chalk.green(updatedMessage);
+            break;
+        }
+        case 'ERROR': {
+            updatedMessage = chalk.red(updatedMessage);
+            break;
+        }
+
+        default:
+            updatedMessage = chalk.blue(updatedMessage);
+            break;
+    }
+    console.log(updatedMessage);
 };
 
 export const updateThaproxyNodeServiceRoute = ({
@@ -50,19 +70,17 @@ export const updateThaproxyNodeServiceRoute = ({
 };
 
 export const getIsTracxnHaproxyUp = () => {
+    const PORT = 80;
+    const HOST = '127.0.0.1';
     try {
         execSync(
             `
-        PORT=80
-        HOST="127.0.0.1"
         {
-            echo "" > /dev/tcp/$HOST/$PORT && echo "Port $PORT is open"
+            echo "" > /dev/tcp/${HOST}/${PORT} && echo "Port $PORT is open"
         } &> /dev/null
         if [[ $? == 0 ]]; then
-            echo "\nmycli: Haproxy is running at \${HOST}:\${PORT}."
             exit 0;
         else
-            echo "\nmycli: Haproxy is not running at \${HOST}:\${PORT}."
             exit 1;
         fi
     `,
@@ -71,10 +89,12 @@ export const getIsTracxnHaproxyUp = () => {
                 stdio: [0, 1, 2],
             },
         );
+        logToConsole(`Tracxn's Haproxy is running at ${HOST}:${PORT}`, 'SUCCESS');
         return true;
     } catch (error) {
         /* empty */
     }
+    logToConsole(`Tracxn's Haproxy is not running at ${HOST}:${PORT}`, 'ERROR');
     return false;
 };
 

@@ -47,8 +47,8 @@ const registerCommands = (program: Command) => {
                             updateThaproxyNodeServiceRoute({ service: serviceName, status: T_NODE_SERVICE_STATUS.AWS });
                             serviceStopped = true;
                         }
-                        logToConsole(`Tracxn's Haproxy will now point to devCloud's \`${serviceName}\` service`);
-                        logToConsole(`Done 🎉`);
+                        logToConsole(`Tracxn's Haproxy will now point to it's devCloud \`${serviceName}\` service`);
+                        logToConsole(`Done 🎉`, 'SUCCESS');
                         process.exit(0);
                     });
                 });
@@ -70,15 +70,15 @@ const registerCommands = (program: Command) => {
                     }, LOGS_HOME: ${serviceLogsHome}, PORT: ${servicePort} envs at Path - ${servicePath}`,
                 );
 
-                execSync(
-                    `cd ${servicePath} && LOGS_HOME=${serviceLogsHome} DATABASE=${
-                        database || 'tracxndev'
-                    } PORT=${servicePort} yarn dev`,
-                    {
-                        encoding: 'utf8',
-                        stdio: [0, 1, 2],
-                    },
-                );
+                // execSync(
+                //     `cd ${servicePath} && LOGS_HOME=${serviceLogsHome} DATABASE=${
+                //         database || 'tracxndev'
+                //     } PORT=${servicePort} yarn dev`,
+                //     {
+                //         encoding: 'utf8',
+                //         stdio: [0, 1, 2],
+                //     },
+                // );
             },
         );
 };
