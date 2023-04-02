@@ -54,6 +54,7 @@ program
                     }
                     serviceStopped = true;
                     console.log(`mycli: Done.\n`);
+                    process.exit(0);
                 });
             });
 

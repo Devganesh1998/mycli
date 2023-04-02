@@ -2,7 +2,7 @@
   "name": "@deva2k/mycli",
   "version": "1.0.0",
   "description": "Customizable CLI using plugins",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Devganesh1998/mycli"
@@ -12,7 +12,9 @@
     "email": "devganesh91@gmail.com",
     "url": "https://devganesh.netlify.app"
   },
-  "bin": "./dist/index.js",
+  "bin": {
+    "mycli": "./dist/index.js"
+  },
   "scripts": {
     "dev": "NODE_ENV=development rollup -cw",
     "prepublish": "yarn build",
