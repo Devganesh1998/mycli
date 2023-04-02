@@ -1,6 +1,6 @@
 {
   "name": "@deva2k/mycli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Customizable CLI using plugins",
   "main": "./dist/index.js",
   "repository": {
