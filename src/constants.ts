@@ -1,3 +1,6 @@
+import path from 'path';
+import { homedir } from 'os';
+
 export const NODE_SERVICES = {
     analog: {
         path: '~/tracxn/node/services/analog',
@@ -34,5 +37,12 @@ export const NODE_SERVICES = {
 };
 
 export const DEFAULT_DATABASE = 'tracxndev';
+
+export const DOCXN_SERVICE_ROUTE_CONFIG_FILE = path.resolve(homedir(), 'tracxn/docxn/localRunningServices');
+
+export enum T_NODE_SERVICE_STATUS {
+    LOCAL = 'LOCAL',
+    AWS = 'AWS',
+}
 
 export const DOCXN_PATH = '~/tracxn/infra/scripts/docxn/docxn.py';
