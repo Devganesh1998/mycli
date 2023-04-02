@@ -121,6 +121,7 @@ export const startTracxnHaproxy = () => {
             default:
                 break;
         }
+        logToConsole(`Tracxn's Haproxy has now started`, 'SUCCESS');
     } catch (error: any) {
         logToConsole(`Error in starting haproxy, message: ${error?.message || ''}`);
         logToConsole('Please start haproxy by using `docxn haproxy start`');
