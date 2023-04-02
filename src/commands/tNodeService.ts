@@ -70,15 +70,15 @@ const registerCommands = (program: Command) => {
                     }, LOGS_HOME: ${serviceLogsHome}, PORT: ${servicePort} envs at Path - ${servicePath}`,
                 );
 
-                // execSync(
-                //     `cd ${servicePath} && LOGS_HOME=${serviceLogsHome} DATABASE=${
-                //         database || 'tracxndev'
-                //     } PORT=${servicePort} yarn dev`,
-                //     {
-                //         encoding: 'utf8',
-                //         stdio: [0, 1, 2],
-                //     },
-                // );
+                execSync(
+                    `cd ${servicePath} && LOGS_HOME=${serviceLogsHome} DATABASE=${
+                        database || 'tracxndev'
+                    } PORT=${servicePort} yarn dev`,
+                    {
+                        encoding: 'utf8',
+                        stdio: [0, 1, 2],
+                    },
+                );
             },
         );
 };
