@@ -38,11 +38,34 @@ export const NODE_SERVICES = {
 
 export const DEFAULT_DATABASE = 'tracxndev';
 
+export const TRACXN_DEV_CLOUD_IP = '13.127.196.65';
+
 export const DOCXN_SERVICE_ROUTE_CONFIG_FILE = path.resolve(homedir(), 'tracxn/docxn/localRunningServices');
+
+export const T_HAPROXY_CONFIG_TEMPLATE_PATH = path.resolve(
+    homedir(),
+    'tracxn/infra/scripts/docxn/haproxy/data/share/system/haproxy.cfg.template',
+);
+
+export const T_HAPROXY_CONFIG_REF_PATH = path.resolve(
+    homedir(),
+    'tracxn/infra/scripts/docxn/haproxy/data/share/system/haproxy.cfg',
+);
 
 export enum T_NODE_SERVICE_STATUS {
     LOCAL = 'LOCAL',
     AWS = 'AWS',
+}
+
+export enum T_HAPROXY_INSTALLATION_PATH {
+    LINUX = '/etc/haproxy/',
+    MAC = '/opt/homebrew/etc/',
+    INTEL_MAC = '/usr/local/etc/',
+}
+
+export enum T_HAPROXY_ACTIONS {
+    START = 'START',
+    RELOAD = 'RELOAD',
 }
 
 export const DOCXN_PATH = '~/tracxn/infra/scripts/docxn/docxn.py';

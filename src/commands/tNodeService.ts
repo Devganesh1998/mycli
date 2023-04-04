@@ -1,11 +1,11 @@
 import { Command } from 'commander';
 import { execSync } from 'child_process';
-import { NODE_SERVICES, DEFAULT_DATABASE, T_NODE_SERVICE_STATUS } from './../constants';
+import { NODE_SERVICES, DEFAULT_DATABASE, T_NODE_SERVICE_STATUS, T_HAPROXY_ACTIONS } from './../constants';
 import {
     getArgumentValidator,
     updateThaproxyNodeServiceRoute,
     getIsTracxnHaproxyUp,
-    startTracxnHaproxy,
+    handleTracxnHaproxy,
     logToConsole,
 } from './../utils';
 
@@ -47,20 +47,19 @@ const registerCommands = (program: Command) => {
                             updateThaproxyNodeServiceRoute({ service: serviceName, status: T_NODE_SERVICE_STATUS.AWS });
                             serviceStopped = true;
                         }
-                        logToConsole(`Tracxn's Haproxy will now point to it's devCloud \`${serviceName}\` service`);
+                        logToConsole(`Tracxn's Haproxy will now route to it's devCloud \`${serviceName}\` service`);
+                        handleTracxnHaproxy(T_HAPROXY_ACTIONS.RELOAD);
                         logToConsole(`Done 🎉`, 'SUCCESS');
                         process.exit(0);
                     });
                 });
 
-                const isTracxnHaproxyUp = getIsTracxnHaproxyUp();
-
-                if (!isTracxnHaproxyUp) {
-                    startTracxnHaproxy();
-                }
-
                 // docxn <service> start;
                 updateThaproxyNodeServiceRoute({ service: serviceName, status: T_NODE_SERVICE_STATUS.LOCAL });
+
+                const isTracxnHaproxyUp = getIsTracxnHaproxyUp();
+
+                handleTracxnHaproxy(isTracxnHaproxyUp ? T_HAPROXY_ACTIONS.RELOAD : T_HAPROXY_ACTIONS.START);
 
                 logToConsole(`Tracxn's Haproxy is now pointing to local ${serviceName} service`);
 
