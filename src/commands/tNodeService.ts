@@ -72,7 +72,7 @@ const registerCommands = (program: Command) => {
                 execSync(
                     `cd ${servicePath} && LOGS_HOME=${serviceLogsHome} DATABASE=${
                         database || 'tracxndev'
-                    } PORT=${servicePort} yarn dev`,
+                    } PORT=${servicePort} pnpm dev`,
                     {
                         encoding: 'utf8',
                         stdio: [0, 1, 2],
